@@ -14,5 +14,11 @@
     },
     "background": {
         "scripts": ["background_scripts/index.js"]
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "js": ["crawler/index.js"]
+        }
+    ]
 }

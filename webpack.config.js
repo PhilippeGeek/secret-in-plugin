@@ -5,7 +5,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     entry: {
         background_scripts: "./src/background_scripts/background.js",
-        popup: "./src/popup/left-pad.js"
+        popup: "./src/popup/left-pad.js",
+        crawler: "./src/crawler.js"
     },
     module: {
 
