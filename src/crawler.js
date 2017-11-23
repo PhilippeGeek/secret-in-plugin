@@ -1,8 +1,16 @@
 import PasswordForm from './manager/PasswordForm';
 
-let passwordFields = document.querySelectorAll("input[type='password']");
+const seenForms = new Set();
 const forms = [];
-for(var i=0; i<passwordFields.length;i++){
-    forms.push(new PasswordForm(window.location.hostname, passwordFields[i]));
-}
-console.log(forms);
+
+const parser = function() {
+    let passwordFields = document.querySelectorAll("input[type='password']");
+    for (let i = 0; i < passwordFields.length; i++) {
+        if (seenForms.has(passwordFields[i])) continue;
+        seenForms.add(passwordFields[i]);
+        forms.push(new PasswordForm(window.location.hostname, passwordFields[i]));
+    }
+    console.log(forms);
+};
+parser();
+setInterval(parser, 3000);

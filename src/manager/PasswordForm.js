@@ -21,7 +21,9 @@ export default class PasswordForm {
         for (let i=0; i<elements.length; i++) {
             const element = elements[i];
             if(element instanceof HTMLInputElement){
-                if(element.type === "text") {
+                if(element.type === "text"
+                || element.type === "email"
+                || element.type === "phone") {
                     candidates.push(element);
                 }
             }
@@ -31,7 +33,21 @@ export default class PasswordForm {
         } else if(candidates.length === 0){
             return null; // no possible candidates
         } else {
-            // We have to choose
+            for(let i=0; i<candidates.length; i++) {
+                if(/user/i.exec(candidates[i].name)){
+                    return candidates[i];
+                }
+            }
+            for(let i=0; i<candidates.length; i++) {
+                if(/login/i.exec(candidates[i].name)){
+                    return candidates[i];
+                }
+            }
+            for(let i=0; i<candidates.length; i++) {
+                if(/mail/i.exec(candidates[i].name)){
+                    return candidates[i];
+                }
+            }
         }
     }
 
