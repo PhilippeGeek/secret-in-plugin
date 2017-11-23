@@ -18,6 +18,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "left-pad": "^1.1.1"
+    "left-pad": "^1.1.1",
+    "secretin": "git+https://github.com/secretin/secretin-lib.git"
   }
 }
