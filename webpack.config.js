@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     entry: {
         background_scripts: "./src/background_scripts/background.js",
-        popup: "./src/popup/left-pad.js",
+        popup: "./src/popup/index.js",
         crawler: "./src/crawler.js"
     },
     module: {
@@ -19,7 +19,7 @@ module.exports = {
                         'scss': 'vue-style-loader!css-loader!sass-loader',
                         'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
                     }
-                    // other vue-loader options go here
+                    // other vue.js-loader options go here
                 }
             },
             {
