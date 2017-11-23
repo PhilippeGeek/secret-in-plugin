@@ -87,8 +87,10 @@ export default class PasswordForm {
         }
 
         this.passwordField.form.addEventListener('submit', () => {
-            console.log("form-values");
-            console.log(this.serialize());
+            browser.runtime.sendMessage({
+                type: 'form-submit',
+                data: this.serialize()
+            })
         })
     }
 
