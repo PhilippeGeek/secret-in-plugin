@@ -2,16 +2,28 @@
 
 export default class PasswordForm {
 
+    static hashCode(str) {
+        return Math.abs(str.split('').reduce((prevHash, currVal) =>
+            ((prevHash << 5) - prevHash) + currVal.charCodeAt(0), 0));
+    }
+
     /**
      *
      * @param {string} pid
      * @param {HTMLInputElement} passwordField
      */
     constructor(pid, passwordField){
+        /**
+         * @type {HTMLInputElement}
+         */
         this.passwordField = passwordField;
+        /**
+         * @type {HTMLInputElement}
+         */
         this.usernameField = this.findUsernameField();
-        console.log(this.usernameField);
-        this.ufid = pid + this.computeFID();
+        this.ufid = pid + '/' + this.computeFID();
+        this.setupListen();
+        this.proposal = null;
     }
 
     findUsernameField() {
@@ -56,6 +68,35 @@ export default class PasswordForm {
      * The FID is based on fields names on the page.
      */
     computeFID() {
+        const form = this.passwordField.form;
+        return PasswordForm.hashCode(form.method + form.action + form.id);
+    }
 
+    setupListen() {
+        if(this.usernameField){
+
+            let onEvent = (e) => {
+                if(!this.rejected && this.proposal === null){
+
+                }
+            };
+            this.usernameField.addEventListener('focus', onEvent);
+            this.usernameField.addEventListener('click', onEvent);
+            this.usernameField.addEventListener('keydone', onEvent);
+
+        }
+
+        this.passwordField.form.addEventListener('submit', () => {
+            console.log("form-values");
+            console.log(this.serialize());
+        })
+    }
+
+    serialize(){
+        return {
+            ufid: this.ufid,
+            username: this.usernameField.value,
+            password: this.passwordField.value
+        }
     }
 }
