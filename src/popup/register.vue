@@ -1,17 +1,75 @@
 <template>
-    <div id="element">
-    bar world: {{message}}</div>
+    <div id="register">
+        <form v-on:submit="handleForm()">
+            <div class="form-margin" >
+                <div class="form-group">
+                    <label for="username">Identifiant</label>
+                    <input type="email" class="form-control" id="username" name="username" placeholder="" v-model="username">
+                    <small id="noLogin"  v-if="register" class="form-text text-muted">Je ai déjà un compte,
+                        <a class="text-info link" v-on:click="register = false">se connecter</a>
+                    </small>
+                    <small id="goRegister" v-if="!register" class="form-text text-muted">Je n'ai pas de compte,
+                        <a class="text-info link" v-on:click="register = true">en créer un</a>
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="" v-model="password">
+                </div>
+                <div class="form-group"  v-if="register" >
+                    <label for="passwordConfirmation">Confirmation du mot de passe</label>
+                    <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation"
+                           placeholder="" v-model="passwordConfirmation">
+                </div>
+                <div class="form-group">
+                    <label for="server">Serveur de données</label>
+                    <input type="url" class="form-control" id="server" name="server" placeholder=""
+                           value="http://localhost:3000" v-model="server">
+                    <small id="dataServerHelp" class="form-text text-muted">
+                        Ce serveur conserve les données chiffrées de vos mots de passes
+                    </small>
+                </div>
+            </div>
+            <button class="btn btn-block btn-primary btn-not-round">Connexion</button>
+        </form>
+    </div>
 </template>
 
 <script>
     export default {
-        data () {
+        data() {
             return {
-                msg: 'Die to Your Vue.js App'
+                register: false,
+                username: "",
+                password: "",
+                passwordConfirmation: "",
+                server: "http://localhost:3000"
+            }
+        },
+        methods: {
+            register(){},
+            login(){},
+            handleForm(){
+                if(this.register)
+                    this.register();
+                else
+                    this.login();
             }
         }
     }
 </script>
 
 <style lang="scss">
+    #register {
+        background: #f9f9f9;
+        width: 300px;
+
+        .link{
+            cursor: pointer;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+
+    }
 </style>

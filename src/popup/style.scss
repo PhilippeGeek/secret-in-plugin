@@ -2,6 +2,10 @@
 
 form{
   .form-margin{
-    margin: 0.75em;
+    padding: 0.75em;
   }
+}
+
+.btn-not-round{
+  border-radius: 0;
 }

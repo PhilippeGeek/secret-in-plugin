@@ -3,18 +3,25 @@
         <form>
             <div class="form-margin">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                           placeholder="Enter email">
-                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.
+                    <label for="username">Identifiant</label>
+                    <input type="email" class="form-control" id="username" placeholder="" v-model="username">
+                    <small id="noLogin" class="form-text text-muted">Je n'ai pas de compte,
+                        <router-link to="/register">en créer un</router-link>
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" placeholder="" v-model="password">
+                </div>
+                <div class="form-group">
+                    <label for="server">Serveur de données</label>
+                    <input type="url" class="form-control" id="server" name="server" placeholder="" v-model="server">
+                    <small id="dataServerHelp" class="form-text text-muted">
+                        Ce serveur conserve les données chiffrées de vos mots de passes
+                    </small>
                 </div>
             </div>
-            <button class="btn btn-block btn-primary">Connexion</button>
+            <button class="btn btn-block btn-primary btn-not-round">Connexion</button>
         </form>
     </div>
 </template>
@@ -23,7 +30,9 @@
     export default {
         data() {
             return {
-                msg: 'Welcome to Your Vue.js App'
+                username: "",
+                password: "",
+                server: "http://localhost:3000"
             }
         }
     }
