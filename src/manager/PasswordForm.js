@@ -13,6 +13,7 @@ export default class PasswordForm {
      * @param {HTMLInputElement} passwordField
      */
     constructor(pid, passwordField){
+        this.domain = pid;
         /**
          * @type {HTMLInputElement}
          */
@@ -23,7 +24,7 @@ export default class PasswordForm {
         this.usernameField = this.findUsernameField();
         this.ufid = pid + '/' + this.computeFID();
         this.setupListen();
-        this.proposal = null;
+        this.proposal = false;
     }
 
     findUsernameField() {
@@ -76,13 +77,27 @@ export default class PasswordForm {
         if(this.usernameField){
 
             let onEvent = (e) => {
-                if(!this.rejected && this.proposal === null){
-
+                if(!this.proposal) {
+                    console.log('Asking...');
+                    browser.runtime.sendMessage({
+                        type: 'form-request',
+                        data: {
+                            domain: this.domain
+                        }
+                    }).then((result) => {
+                        if (result.success) {
+                            let candidates = result.candidates;
+                            if (candidates.length === 1) {
+                                console.log(candidates[0]);
+                            }
+                        } else {
+                            // No login for this website
+                        }
+                    });
+                    this.proposal = true;
                 }
             };
-            this.usernameField.addEventListener('focus', onEvent);
             this.usernameField.addEventListener('click', onEvent);
-            this.usernameField.addEventListener('keydone', onEvent);
 
         }
 

@@ -48,7 +48,7 @@ class AppUIActions {
         });
     }
 
-    loginUser({username, password}) {
+    loginUser({username, password, token}) {
         return new Promise((resolve, reject) => {
 
             this.api
@@ -65,6 +65,7 @@ class AppUIActions {
                     })
                 )
                 .catch(error => {
+                    console.error(error)
                     if (error instanceof UserNotFoundError) {
                         return reject({
                             error: {username: 'User not found'},

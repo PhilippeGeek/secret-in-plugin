@@ -1,11 +1,12 @@
 <template>
     <div id="register">
         <form v-on:submit.prevent="handleForm()">
-            <div class="form-margin" >
+            <div class="form-margin">
 
                 <div class="form-group">
                     <label for="username">Identifiant</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="" v-model="username">
+                    <input type="text" class="form-control" id="username" name="username" placeholder=""
+                           v-model="username">
                     <small id="noLogin" v-if="registrationMode" class="form-text text-muted">Je ai déjà un compte,
                         <a class="text-info link" v-on:click="registrationMode = false">se connecter</a>
                     </small>
@@ -15,9 +16,11 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="" v-model="password">
+                    <input type="password" class="form-control" id="password" name="password" placeholder=""
+                           v-model="password">
+                    <small id="error" v-if="error" class="form-text text-danger">Identifiant ou mot de passe faux</small>
                 </div>
-                <div class="form-group"  v-if="registrationMode" >
+                <div class="form-group" v-if="registrationMode">
                     <label for="passwordConfirmation">Confirmation du mot de passe</label>
                     <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation"
                            placeholder="" v-model="passwordConfirmation">
@@ -30,6 +33,12 @@
                         Ce serveur conserve les données chiffrées de vos mots de passes
                     </small>
                 </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" v-model="stayLogged">
+                        Rester connecté
+                    </label>
+                </div>
             </div>
             <button class="btn btn-block btn-primary btn-not-round">Connexion</button>
         </form>
@@ -40,6 +49,8 @@
     export default {
         data() {
             return {
+                stayLogged: true,
+                error: false,
                 registrationMode: false,
                 username: "",
                 password: "",
@@ -48,26 +59,26 @@
             }
         },
 
-        beforeRouteEnter (to, from, next) {
+        beforeRouteEnter(to, from, next) {
             browser.runtime.sendMessage({
                 type: 'user'
             }).then((user) => {
-                if(!user) next();
+                if (!user) next();
                 else next('/storage');
             })
         },
         // quand la route change et que ce composant est déjà rendu,
         // la logique est un peu différente
-        beforeRouteUpdate (to, from, next) {
+        beforeRouteUpdate(to, from, next) {
             browser.runtime.sendMessage({
                 type: 'user'
             }).then((user) => {
-                if(!user) next();
+                if (!user) next();
                 else next('/storage');
             })
         },
         methods: {
-            register(){
+            register() {
                 browser.runtime.sendMessage({
                     type: 'register',
                     data: {
@@ -80,20 +91,24 @@
                     this.$router.push('/storage')
                 })
             },
-            login(){
+            login() {
                 browser.runtime.sendMessage({
                     type: 'login',
                     data: {
                         username: this.username,
                         password: this.password,
+                        shortLogin: this.stayLogged,
                         server: this.server
                     }
-                }).then(() => {
-                    this.$router.push('/storage')
+                }).then((result) => {
+                    if (result.success)
+                        this.$router.push('/storage');
+                    else
+                        this.error = true;
                 })
             },
-            handleForm(){
-                if(this.registrationMode)
+            handleForm() {
+                if (this.registrationMode)
                     this.register();
                 else
                     this.login();
@@ -107,9 +122,9 @@
         background: #f9f9f9;
         width: 300px;
 
-        .link{
+        .link {
             cursor: pointer;
-            &:hover{
+            &:hover {
                 text-decoration: underline;
             }
         }

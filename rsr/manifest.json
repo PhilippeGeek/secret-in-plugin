@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Webpack Example",
-    "version": "1.0.0",
-    "description": "A minimal example of how to use npm modules from within a WebExtension.",
+    "name": "Secretin",
+    "version": "0.1.0",
+    "description": "Secretin browser extension.",
     "icons": {
         "128": "icons/lock.png"
     },
@@ -20,5 +20,10 @@
             "matches": ["*://*/*"],
             "js": ["crawler/index.js"]
         }
+    ],
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "storage"
     ]
 }

@@ -7,7 +7,9 @@
             Bonjour {{user.username}}
         </div>
         <div class="content" v-if="!loading">
-
+            <div class="website" v-for="metadata in user.metadatas">
+                {{metadata.title}}
+            </div>
         </div>
         <button class="btn btn-danger btn-block" v-if="!loading" v-on:click="logout()">Déconnexion</button>
     </div>
@@ -18,7 +20,7 @@
         data() {
             return {
                 loading: true,
-                user: null,
+                user: {},
             }
         },
 
@@ -42,8 +44,8 @@
                     }).then((user) => {
                         this.user = user;
                         this.loading = false;
-                        if (!this.user.username) this.logout();
-                        console.log(this.user);
+                        if (!user.username) this.logout();
+                        console.log(user.metadatas);
                     })
 
                 }, 1000);
