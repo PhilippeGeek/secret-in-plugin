@@ -1,22 +1,23 @@
 <template>
     <div id="register">
-        <form v-on:submit="handleForm()">
+        <form v-on:submit.prevent="handleForm()">
             <div class="form-margin" >
+
                 <div class="form-group">
                     <label for="username">Identifiant</label>
-                    <input type="email" class="form-control" id="username" name="username" placeholder="" v-model="username">
-                    <small id="noLogin"  v-if="register" class="form-text text-muted">Je ai déjà un compte,
-                        <a class="text-info link" v-on:click="register = false">se connecter</a>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="" v-model="username">
+                    <small id="noLogin" v-if="registrationMode" class="form-text text-muted">Je ai déjà un compte,
+                        <a class="text-info link" v-on:click="registrationMode = false">se connecter</a>
                     </small>
-                    <small id="goRegister" v-if="!register" class="form-text text-muted">Je n'ai pas de compte,
-                        <a class="text-info link" v-on:click="register = true">en créer un</a>
+                    <small id="goRegister" v-if="!registrationMode" class="form-text text-muted">Je n'ai pas de compte,
+                        <a class="text-info link" v-on:click="registrationMode = true">en créer un</a>
                     </small>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="" v-model="password">
                 </div>
-                <div class="form-group"  v-if="register" >
+                <div class="form-group"  v-if="registrationMode" >
                     <label for="passwordConfirmation">Confirmation du mot de passe</label>
                     <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation"
                            placeholder="" v-model="passwordConfirmation">
@@ -39,18 +40,60 @@
     export default {
         data() {
             return {
-                register: false,
+                registrationMode: false,
                 username: "",
                 password: "",
                 passwordConfirmation: "",
                 server: "http://localhost:3000"
             }
         },
+
+        beforeRouteEnter (to, from, next) {
+            browser.runtime.sendMessage({
+                type: 'user'
+            }).then((user) => {
+                if(!user) next();
+                else next('/storage');
+            })
+        },
+        // quand la route change et que ce composant est déjà rendu,
+        // la logique est un peu différente
+        beforeRouteUpdate (to, from, next) {
+            browser.runtime.sendMessage({
+                type: 'user'
+            }).then((user) => {
+                if(!user) next();
+                else next('/storage');
+            })
+        },
         methods: {
-            register(){},
-            login(){},
+            register(){
+                browser.runtime.sendMessage({
+                    type: 'register',
+                    data: {
+                        username: this.username,
+                        password: this.password,
+                        passwordConfirmation: this.passwordConfirmation,
+                        server: this.server
+                    }
+                }).then(() => {
+                    this.$router.push('/storage')
+                })
+            },
+            login(){
+                browser.runtime.sendMessage({
+                    type: 'login',
+                    data: {
+                        username: this.username,
+                        password: this.password,
+                        server: this.server
+                    }
+                }).then(() => {
+                    this.$router.push('/storage')
+                })
+            },
             handleForm(){
-                if(this.register)
+                if(this.registrationMode)
                     this.register();
                 else
                     this.login();
