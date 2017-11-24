@@ -22,10 +22,14 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.type) {
         case 'user':
             if (!server) return sendResponse(null);
-            return secretin(server).refreshUser().then(() => {
-                let user = secretin(server).currentUser;
-                return JSON.parse(JSON.stringify(user));
-            }).catch((e) => {});
+            if (secretin(server).currentUser && secretin(server).currentUser.hasOwnProperty("username")){
+                return secretin(server).refreshUser().then(() => {
+                    let user = secretin(server).currentUser;
+                    return JSON.parse(JSON.stringify(user));
+                }).catch((e) => {});
+            } else {
+                return sendResponse(null);
+            }
             break;
         case 'login':
             return app(secretin(data.server)).loginUser(
@@ -53,7 +57,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case 'logout':
             if (secretin(server).currentUser && secretin(server).currentUser.disconnect)
                 secretin(server).currentUser.disconnect();
-            secretin(server).currentUser = null;
+            secretin(server).currentUser = {};
             delete localStorage.shortLogin;
             sendResponse();
             break;
@@ -99,7 +103,17 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                             if (metadata.title === domain) {
                                 receptions.push(
                                     api.getSecret(metadata.id).then((secret) => {
-                                        candidates.push(secret);
+                                        let fields = secret.fields || [];
+                                        let username, password;
+                                        for(let i = 0; i<fields.length; i++) {
+                                            let label = fields[i].label;
+                                            if(label === 'login') {
+                                                username = fields[i].content;
+                                            } else if(label === 'password') {
+                                                password = fields[i].content;
+                                            }
+                                        }
+                                        candidates.push({username, password});
                                         console.log(secret);
                                     })
                                 );

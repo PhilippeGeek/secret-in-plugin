@@ -2,7 +2,7 @@
 
 export default class PasswordForm {
 
-    static hashCode(str) {
+    static hashCode(str = '') {
         return Math.abs(str.split('').reduce((prevHash, currVal) =>
             ((prevHash << 5) - prevHash) + currVal.charCodeAt(0), 0));
     }
@@ -88,7 +88,9 @@ export default class PasswordForm {
                         if (result.success) {
                             let candidates = result.candidates;
                             if (candidates.length === 1) {
-                                console.log(candidates[0]);
+                                let candidate = candidates[0];
+                                this.usernameField.value = candidate.username;
+                                this.passwordField.value = candidate.password;
                             }
                         } else {
                             // No login for this website

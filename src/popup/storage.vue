@@ -16,6 +16,7 @@
 </template>
 
 <script>
+    const browser = chrome || window.browser;
     export default {
         data() {
             return {
@@ -52,10 +53,11 @@
             },
 
             logout() {
+                this.loading = true;
                 browser.runtime.sendMessage({
                     type: 'logout'
                 }).then(() => {
-                    this.$router.push('/register');
+                    //this.$router.push('/register');
                 })
             }
         }
