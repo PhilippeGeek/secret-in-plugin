@@ -16,6 +16,7 @@ if (server && shortLogin) {
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!message.type) return;
+    let api;
     const data = message.data || {};
     switch (message.type) {
         case 'user':
@@ -82,7 +83,45 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
             });
             break;
         case 'form-submit':
+            api = secretin(server);
+            return new Promise((resolve, reject) => {
+                if (!api.currentUser || !api.currentUser.username) {
+                    return reject({success: false});
+                }
+                const domain = data.domain;
+                const candidates = [];
+                const receptions = [];
+                api.refreshUser().then(() => {
+                    let metadatas = api.currentUser.metadatas;
+                    for (let id in metadatas) {
+                        if (metadatas.hasOwnProperty(id)) {
+                            const metadata = metadatas[id];
+                            if (metadata.title === domain) {
+                                receptions.push(
+                                    api.getSecret(metadata.id).then((secret) => {
+                                        let fields = secret.fields || [];
+                                        for(let i = 0; i<fields.length; i++) {
+                                            let label = fields[i].label;
+                                            if(label === 'login') {
+                                                fields[i].content = data.username;
+                                            } else if(label === 'password') {
+                                                fields[i].content = data.password;
+                                            }
+                                        }
+                                        return api.currentUser.editSecret(metadata.id, secret);
+                                    })
+                                );
+                            }
+                        }
+                    }
+                    Promise.all(receptions)
+                        .then(() => resolve({success: true}))
+                        .catch(() => reject({success: false}))
+                }).catch(() => {
+                    reject({success: false})
+                })
 
+            });
             break;
         case 'form-request':
             let api = secretin(server);

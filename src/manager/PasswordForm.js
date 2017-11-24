@@ -113,6 +113,7 @@ export default class PasswordForm {
 
     serialize(){
         return {
+            domain: this.domain,
             ufid: this.ufid,
             username: this.usernameField.value,
             password: this.passwordField.value
