@@ -7,3 +7,6 @@
 
 The WebExtension in the [addon](addon/) folder should now work.
 
+## License
+
+This repository is under MIT license.
