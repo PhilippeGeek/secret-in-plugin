@@ -3,8 +3,6 @@ import app from '../manager/AppUIActions';
 import {Utils} from 'secretin';
 
 
-const browser = chrome || window.browser;
-
 let server = localStorage.secretin_server;
 let shortLogin = localStorage.shortLogin;
 

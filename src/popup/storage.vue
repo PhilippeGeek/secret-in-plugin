@@ -16,7 +16,6 @@
 </template>
 
 <script>
-    const browser = chrome || window.browser;
     export default {
         data() {
             return {

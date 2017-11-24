@@ -4,8 +4,6 @@ import App from './popup.vue'
 import Register from './register.vue'
 import Storage from './storage.vue'
 
-const browser = chrome || window.browser;
-
 Vue.use(VueRouter);
 
 const routes = [
